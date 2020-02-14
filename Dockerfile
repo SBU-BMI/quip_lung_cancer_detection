@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:0.4.1-cuda9-cudnn7-devel 
+FROM pytorch/pytorch:1.4-cuda10.1-cudnn7-devel
 MAINTAINER Tahsin Kurc
 
 RUN		apt-get -y update && \
