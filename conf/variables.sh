@@ -6,7 +6,7 @@ DEFAULT_MPP=0.5
 CANCER_TYPE=quip
 MONGODB_HOST=quip4.bmi.stonybrook.edu
 MONGODB_PORT=27017
-HEATMAP_VERSION=cancer-lung-6c_20200210_hanle
+HEATMAP_VERSION=cancer-lung-2c
 
 # Base directory
 BASE_DIR=/data04/shared/hanle/quip_lung_cancer_detection

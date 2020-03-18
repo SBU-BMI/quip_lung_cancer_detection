@@ -7,13 +7,13 @@ cd patch_extraction_tumor_40X
 nohup bash start.sh &
 cd ..
 
-cd prediction_6classes
+cd prediction
 nohup bash start.sh &
 cd ..
 
 wait;
 
-cd heatmap_gen_separate_classes
+cd heatmap_gen
 nohup bash start.sh &
 cd ..
 
