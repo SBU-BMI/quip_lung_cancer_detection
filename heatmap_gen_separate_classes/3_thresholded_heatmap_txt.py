@@ -23,6 +23,8 @@ def process(file):
         out.writelines('{} {} {} 0 \n'.format(pred[0], pred[1], res))
 
     out.close()
+    color_fn = 'color-' + slide_id.split('prediction-')[-1]
+    os.system('cp {} {}'.format(os.path.join(in_fol, color_fn), os.path.join(out_fol, color_fn)))
 
 print(len(files))
 pool = mp.Pool(processes=20)
