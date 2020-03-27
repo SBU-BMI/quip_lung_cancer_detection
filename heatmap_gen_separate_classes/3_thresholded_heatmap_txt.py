@@ -5,9 +5,13 @@ import numpy as np
 import multiprocessing as mp
 
 in_fol = '../data/heatmap_txt'
-out_fol = '../data/heatmap_txt_6classes_separate_class/heatmap_txt_thresholded'
-if not os.path.exists(out_fol):
-    os.mkdir(out_fol)
+thresholded_fol = '../data/heatmap_txt_6classes_separate_class/heatmap_txt_thresholded'
+tumor_fol = '../data/heatmap_txt_6classes_separate_class/heatmap_txt_tumor'
+if not os.path.exists(thresholded_fol):
+    os.mkdir(thresholded_fol)
+
+if not os.path.exists(tumor_fol):
+    os.mkdir(tumor_fol)
 
 probs = [0.25, 0.1, 0.45, 0.6, 0.75, 0.95]
 files = glob.glob(in_fol + '/prediction*')
@@ -16,15 +20,24 @@ def process(file):
     print(file)
     slide_id = file.split('/')[-1]
     preds = [f.rstrip().split(' ') for f in open(file, 'r')]
-    out = open(os.path.join(out_fol, slide_id), 'w')
+    thresholded = open(os.path.join(thresholded_fol, slide_id), 'w')
     for pred in preds[1:]:
         grades = np.array([float(p) for p in pred[2:]])
         res = probs[np.argmax(grades)] if sum(grades) > 0 else 0
-        out.writelines('{} {} {} 0 \n'.format(pred[0], pred[1], res))
+        thresholded.writelines('{} {} {} 0 \n'.format(pred[0], pred[1], res))
 
-    out.close()
+        benign_prob = grades[1]
+        benign_prob_adjusted = 1
+        if sum(grades) > 0:
+            benign_prob_adjusted = benign_prob*(len(grades) - 1) / (sum(grades) + benign_prob*(len(grades) - 2))
+        tumor.writelines('{} {} {} 0 \n'.format(pred[0], pred[1], 1 - benign_prob_adjusted))
+
+    thresholded.close()
+    tumor.close()
+
     color_fn = 'color-' + slide_id.split('prediction-')[-1]
-    os.system('cp {} {}'.format(os.path.join(in_fol, color_fn), os.path.join(out_fol, color_fn)))
+    os.system('cp {} {}'.format(os.path.join(in_fol, color_fn), os.path.join(thresholded_fol, color_fn)))
+    os.system('cp {} {}'.format(os.path.join(in_fol, color_fn), os.path.join(tumor_fol, color_fn)))
 
 print(len(files))
 pool = mp.Pool(processes=20)

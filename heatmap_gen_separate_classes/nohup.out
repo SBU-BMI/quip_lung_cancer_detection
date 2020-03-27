@@ -1,4 +1,0 @@
-  File "1_cp_heatmaps_all.sh", line 3
-    source ../conf/variables.sh
-            ^
-SyntaxError: invalid syntax
