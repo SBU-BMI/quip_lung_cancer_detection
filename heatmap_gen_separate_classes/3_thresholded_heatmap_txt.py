@@ -21,6 +21,7 @@ def process(file):
     slide_id = file.split('/')[-1]
     preds = [f.rstrip().split(' ') for f in open(file, 'r')]
     thresholded = open(os.path.join(thresholded_fol, slide_id), 'w')
+    tumor = open(os.path.join(tumor_fol, slide_id), 'w')
     for pred in preds[1:]:
         grades = np.array([float(p) for p in pred[2:]])
         res = probs[np.argmax(grades)] if sum(grades) > 0 else 0
