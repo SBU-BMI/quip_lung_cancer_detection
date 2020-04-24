@@ -6,7 +6,7 @@ from sklearn.metrics import mean_squared_error, accuracy_score, hamming_loss, ro
 import copy
 from torch.utils.data import DataLoader, Dataset
 import pdb
-from prostate_utils import *
+from utils import *
 import glob
 import collections
 import random
