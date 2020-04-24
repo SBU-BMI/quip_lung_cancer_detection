@@ -10,6 +10,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
 import numpy as np
+import random
 from utils import *
 
 rand_seed = 26700
@@ -36,7 +37,7 @@ def get_args():
     return args
 
 
-def train_model(model, args, criterion=None, train_loader=train_loader, val_loader=val_loader):
+def train_model(model, args, criterion, train_loader, val_loader):
     best_f1 = 0
     best_epoch = 0
     start_training = time.time()
@@ -89,10 +90,8 @@ def train_model(model, args, criterion=None, train_loader=train_loader, val_load
             preds_train = torch.cat((preds_train, preds))
 
         unique, counts = np.unique(np.array(labels_train), return_counts=True)
-        print('| Epoch:[{}][{}/{}]\tTrain_Loss: {:.4f}\tAccuracy: {:.4f}\tTrain_data: {}\tTime: {:.2f} mins'.format(
+        print('| Epoch:{}\tTrain_Loss: {:.4f}\tAccuracy: {:.4f}\tTrain_data: {}\tTime: {:.2f} mins'.format(
             epoch + 1,
-            ix + 1,
-            len(train_loader.dataset) // args.batch_size,
             running_loss / N_tot,
             running_corrects.item() / N_tot,
             dict(zip(unique, counts)),
@@ -141,8 +140,11 @@ def train_model(model, args, criterion=None, train_loader=train_loader, val_load
                 if not os.path.isdir(save_point):
                     os.mkdir(save_point)
 
-                saved_model_fn = args.net_type + '_' + strftime('%m%d_%H%M')
-                torch.save(state, save_point + saved_model_fn + '_' + str(best_f1) + '_' + str(epoch) + '.t7')
+                saved_model_fn = 'resnet{}_{}_bestF1_{:.4f}_epoch_{}.t7'.format(args.net_depth,
+                                                                        strftime('%m%d_%H%M'),
+                                                                        best_f1,
+                                                                        epoch)
+                torch.save(state, os.path.join(save_point, saved_model_fn))
                 print('=======================================================================')
 
     time_elapsed = time.time() - start_training
@@ -191,7 +193,7 @@ def val_fn_epoch(model, criterion, val_loader):
     val_acc = accuracy_score(labels_val, preds_val)
     f1 = f1_score(labels_val, preds_val,
                   average='macro')  # Calculate metrics for each label, and find their average weighted
-    print(f1_score(labels_val, preds_val, average=None))  # print F1-score for each class
+    print('F1-score of each class for validation: ', f1_score(labels_val, preds_val, average=None))
 
     unique, counts = np.unique(np.array(labels_val), return_counts=True)
     return val_acc, f1, preds_val, labels_val, running_loss / labels_val.size(0), dict(zip(unique, counts))
@@ -264,16 +266,19 @@ def main():
                  [f for f in glob.glob(os.path.join(train_wenjin_fol, '*png'))]
     img_vals = [f for f in glob.glob(os.path.join(val_fol, '*png'))]
 
+    # for a quick demo training...
+    random.shuffle(img_trains)
+    random.shuffle(img_vals)
+    img_trains, img_vals = img_trains[:20000], img_vals[:1000]
     print('len of train/val set: ', len(img_trains), len(img_vals))
 
-    train_set = train_loader(img_trains, transform=data_transforms['train'])
+    train_set = data_loader(img_trains, transform=data_transforms['train'])
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
 
-    val_set = train_loader(img_vals, transform=data_transforms['val'])
+    val_set = data_loader(img_vals, transform=data_transforms['val'])
     val_loader = DataLoader(val_set, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers)
 
     model = get_model(args.net_depth, args.n_class)
-    print(model)
     print('Start training ... ')
 
     criterion = nn.CrossEntropyLoss().to(device)

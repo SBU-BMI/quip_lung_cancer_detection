@@ -7,8 +7,12 @@ import sys
 import argparse
 from PIL import Image
 
+def get_label_from_filename(fn):
+    # *_{lb}.png --> extract the label
+    lb = 0 if int(fn[-5]) == 1 else 1   # 1 in the filename is benign, tumor is others
+    return lb
 
-class train_loader(Dataset):
+class data_loader(Dataset):
     """
     Dataset to read image and label for training
     """
@@ -20,8 +24,8 @@ class train_loader(Dataset):
         img = Image.open(self.imgs[index]).convert('RGB')
         img = self.transform(img)
 
-        lb = 0 if int(self.imgs[index][-5]) == 1 else 1     # benign is 1, tumor is others
-        return img, lb           # *_{lb}.png --> extract the label
+        lb = get_label_from_filename(self.imgs[index])
+        return img, lb
 
     def __len__(self):
         return len(self.imgs)
