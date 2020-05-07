@@ -12,10 +12,11 @@ This repo contains training and prediction code for 6-class Lung cancer detectio
 
 
 ## Training
-- Training codes are in folder "training_codes"
+- Go to folder "training_codes", run python train_lung_john_6classes.py
 
-## WSI prediction
-- Prediction codes are in folder "prediction"
+## WSIs prediction
+- Go to folder "scripts", run bash svs_2_heatmap.sh
+
 
 
 
