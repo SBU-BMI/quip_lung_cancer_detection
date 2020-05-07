@@ -9,7 +9,8 @@ MONGODB_PORT=27017
 HEATMAP_VERSION=cancer-lung-6c_20200210_hanle
 
 # Base directory
-BASE_DIR=/data04/shared/hanle/quip_lung_cancer_detection
+# BASE_DIR=/data04/shared/hanle/quip_lung_cancer_detection
+BASE_DIR="$(dirname "$PWD")"        # auto detect base directory
 
 # The username you want to download heatmaps from
 #USERNAME=olcabasturk@gmail.com
