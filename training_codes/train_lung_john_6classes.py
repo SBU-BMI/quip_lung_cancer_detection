@@ -48,12 +48,6 @@ print('\n\n' + '=' * 20 + os.path.basename(__file__) + '=' * 20)
 for c in codes:
     print(c[:-1])
 
-with open('prostate_utils.py') as f:
-    codes = f.readlines()
-print('\n\n' + '=' * 20 + 'prostate_utils.py' + '=' * 20)
-for c in codes:
-    print(c[:-1])
-
 print(args)
 use_gpu = torch.cuda.is_available()
 print('Using GPU: ', use_gpu)
