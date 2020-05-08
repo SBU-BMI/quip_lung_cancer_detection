@@ -10,6 +10,8 @@ This repo contains training and prediction code for 2-class Lung cancer detectio
  - [sklearn](https://scikit-learn.org/stable/)
  - [PIL](https://pillow.readthedocs.io/en/3.1.x/reference/Image.html)
 
+## Setup conf/variables.sh
+- Change the BASE_DIR to the path of your folder after you clone the git repo 
 
 ## Training
 - Go to folder "training_codes", run python train_lung_2classes.py
