@@ -8,8 +8,12 @@ def mkdir_fol(path):
     if not os.path.exists(path):
         os.mkdir(path)
 
-in_fol = '../data/heatmap_txt'
-out_fol = '../data/heatmap_txt_6classes_separate_class'
+out_dir = os.environ.get('OUT_DIR')
+if out_dir is None:
+   out_dir = "/root/quip_lung_cancer_detection/data" 
+
+in_fol  = str(out_dir)+'/heatmap_txt'
+out_fol = str(out_dir)+'/heatmap_txt_6classes_separate_class'
 
 dest_fols = ['heatmap_txt_lepidic', 'heatmap_txt_benign', 'heatmap_txt_acinar', 'heatmap_txt_micropap', 'heatmap_txt_mucinous', 'heatmap_txt_solid']
 mkdir_fol(out_fol)

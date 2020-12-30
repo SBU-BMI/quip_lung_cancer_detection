@@ -4,9 +4,13 @@ import glob
 import numpy as np
 import multiprocessing as mp
 
-in_fol = '../data/heatmap_txt'
-thresholded_fol = '../data/heatmap_txt_6classes_separate_class/heatmap_txt_thresholded'
-tumor_fol = '../data/heatmap_txt_6classes_separate_class/heatmap_txt_tumor'
+out_dir = os.environ.get('OUT_DIR')
+if out_dir is None:
+   out_dir = "/root/quip_lung_cancer_detection/data" 
+
+in_fol = str(out_dir)+'/heatmap_txt'
+thresholded_fol = str(out_dir)+'/heatmap_txt_6classes_separate_class/heatmap_txt_thresholded'
+tumor_fol = str(out_dir)+'/heatmap_txt_6classes_separate_class/heatmap_txt_tumor'
 if not os.path.exists(thresholded_fol):
     os.mkdir(thresholded_fol)
 
@@ -43,6 +47,4 @@ def process(file):
 print(len(files))
 pool = mp.Pool(processes=20)
 pool.map(process, files)
-
-
 
