@@ -19,7 +19,6 @@ import time
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-
 APS = 350;
 PS = 224
 TileFolder = sys.argv[1] + '/';
@@ -32,6 +31,7 @@ sigma = [ 0.0864,  0.1602,  0.0647]
 
 BatchSize = 96;
 heat_map_out = sys.argv[3];
+old_model = sys.argv[4];
 
 device = torch.device("cuda")
 data_aug = transforms.Compose([
@@ -183,8 +183,6 @@ def unparallelize_model(model):
 # load model
 print('start predicting...')
 start = time.time()
-
-old_model = 'train_lung_john_6classes_netDepth-34_APS-350_randomSeed-2954321_numBenign-80000_0131_1818_bestF1_0.8273143068611924_5.t7'
 
 print("| Load pretrained at  %s..." % old_model)
 checkpoint = torch.load(old_model, map_location=lambda storage, loc: storage)
