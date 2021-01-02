@@ -13,7 +13,7 @@ fi
 
 # Base data and output folders
 export BASE_DIR=/root/quip_lung_cancer_detection
-export DATA_DIR=${BASE_DIR}/data
+export DATA_DIR=/data
 export OUT_DIR=${DATA_DIR}/output
 
 # Prediction folders
